@@ -72,7 +72,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://invoice-management-client-id5y.vercel.app',
   credentials: true,
 }));
 app.use(bodyParser.json());
