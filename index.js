@@ -777,8 +777,8 @@ app.post('/vendor/create-stripe-connect-account', authenticateToken, async (req,
 
     const accountLink = await stripe.accountLinks.create({
       account: account.id,
-      refresh_url: 'http://localhost:5173/dashboard', // Redirect back to dashboard on refresh
-      return_url: 'http://localhost:5173/stripe-connect-success', // Redirect to success page on completion
+      refresh_url: 'https://invoice-management-client.vercel.app/dashboard', // Redirect back to dashboard on refresh
+      return_url: 'https://invoice-management-client.vercel.app/stripe-connect-success', // Redirect to success page on completion
       type: 'account_onboarding',
     });
 
@@ -920,7 +920,7 @@ app.post('/customer/generate-invite-link', (req, res) => {
   if (!customerId) {
     return res.status(400).json({ message: 'Customer ID is required.' });
   }
-  const inviteLink = `http://localhost:5173/customer/dashboard/${customerId}`;
+  const inviteLink = `https://invoice-management-client.vercel.app/customer/dashboard/${customerId}`;
   res.status(200).json({ inviteLink });
 });
 
