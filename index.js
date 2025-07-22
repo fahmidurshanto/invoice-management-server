@@ -60,6 +60,7 @@ const authenticateToken = (req, res, next) => {
   const token = req.cookies.token; // Read token from cookie
 
   if (token == null) return res.sendStatus(401); // No token
+  console.log('Token received:', token); // Add this line
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
@@ -67,6 +68,7 @@ const authenticateToken = (req, res, next) => {
       return res.sendStatus(403); // Invalid token
     }
     req.user = user;
+    console.log('Decoded user:', req.user); // Add this line
     next();
   });
 };
@@ -74,6 +76,8 @@ const authenticateToken = (req, res, next) => {
 app.use(cors({
   origin: 'https://invoice-management-client.vercel.app',
   credentials: true,
+  sameSite: 'None',
+  secure: true,
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -168,7 +172,7 @@ app.post('/login', async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Lax' });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'None' });
     res.status(200).json({ message: 'Login successful!', vendor: { username: vendor.username, approved: vendor.approved, role: 'vendor', subscriptionStatus: vendor.subscriptionStatus, trialEndsAt: vendor.trialEndsAt } });
   } catch (error) {
     console.error('Error during vendor login:', error);
@@ -187,7 +191,7 @@ app.post('/admin/login', (req, res) => {
       JWT_SECRET,
       { expiresIn: '1h' }
     );
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Lax' });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'None' });
     res.status(200).json({ message: 'Admin login successful!', user: { username: 'admin', role: 'admin' } });
   } else {
     res.status(401).json({ message: 'Invalid admin credentials.' });
